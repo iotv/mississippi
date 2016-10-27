@@ -1,0 +1,4 @@
+package: github.com/davidjfelix/videosvc
+import:
+- package: github.com/urfave/negroni
+  version: ^0.2.0
