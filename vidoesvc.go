@@ -5,19 +5,22 @@ import (
 	"fmt"
 	"mime"
 	"io"
-	"io/ioutil"
-	"bytes"
 	"encoding/json"
 	"mime/multipart"
 	"github.com/gorilla/mux"
 	"github.com/urfave/negroni"
-	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/mitchellh/goamz/aws"
+  "github.com/mitchellh/goamz/s3"
 )
 
 type VideoMetadata struct{
 	Id string
+}
+
+type ContentRangeHeader struct{
+	Start int
+	End int
+	Total int
 }
 
 func indexVideo(w http.ResponseWriter, req *http.Request) {
@@ -44,8 +47,8 @@ func createVideo(w http.ResponseWriter, req *http.Request) {
 				resp, _ := json.Marshal("{\"code\": 400}")
 				w.Write(resp)
 			}
-		} // TODO: else send 400
-	} // TODO: else send 400
+		} // TODO: else send 415
+	} // TODO: else send 415
 }
 
 func handleMultipartRelated(req *http.Request, params map[string]string) (error, error) {
@@ -94,19 +97,14 @@ func postVideoData(r io.Reader, v *VideoMetadata) (*VideoMetadata, error){
 }
 
 func basicPost(r io.Reader) {
-	sess, err := session.NewSession(&aws.Config{Region: aws.String("us-east-1")})
-	if err != nil {
-		fmt.Println(err)
-	}
-	svc := s3.New(sess)
-	object, _ := ioutil.ReadAll(r)
-	input := &s3.PutObjectInput{
-		Bucket: aws.String("mg4-video-staging"),
-		Key: aws.String("whatever"),
-		Body: bytes.NewReader(object),
-	}
+	auth, err := aws.EnvAuth()
+  if err != nil {
+    fmt.Println(err)
+  }
+  client := s3.New(auth, aws.USEast)
+	bucket := client.Bucket("mg4-video-staging")
+	err = bucket.PutReader("whatever", r, 355856563, "video/mp4", "")
 
-	_, err = svc.PutObject(input)
 	if err != nil {
 		fmt.Println(err)
 	}

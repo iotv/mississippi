@@ -1,5 +1,5 @@
 hash: 1719c999a363b49d135687a8957a96e0094e45db9a53c409ee6190e5b63ae826
-updated: 2016-10-28T12:32:35.869640942-04:00
+updated: 2016-10-28T22:26:06.039183464-04:00
 imports:
 - name: github.com/aws/aws-sdk-go
   version: 6c577e9e7b08a6d10bad1c9703227cd0403a8dd7
@@ -7,6 +7,13 @@ imports:
   version: 08b5f424b9271eedf6f9f0ce86cb9396ed337a42
 - name: github.com/gorilla/mux
   version: 0eeaf8392f5b04950925b8a69fe70f110fa7cbfc
+- name: github.com/mitchellh/goamz
+  version: caaaea8b30ee15616494ee68abd5d8ebbbef05cf
+  subpackages:
+  - aws
+  - s3
 - name: github.com/urfave/negroni
   version: fde5e16d32adc7ad637e9cd9ad21d4ebc6192535
+- name: github.com/vaughan0/go-ini
+  version: a98ad7ee00ec53921f08832bc06ecf7fd600e6a1
 testImports: []
